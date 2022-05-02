@@ -4,7 +4,7 @@ warnings.simplefilter('ignore')
 import pandas as pd
 import numpy as np
 # import matplotlib.pyplot as plt
-import seaborn as sns
+# import seaborn as sns
 from wwo_hist import retrieve_hist_data
 import datetime
 from statsmodels.tsa.stattools import adfuller, acf, pacf
