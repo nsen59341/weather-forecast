@@ -114,7 +114,7 @@ future_datest_data=pd.DataFrame(index=future_dates[0:],columns=['tempC'])
 
 future_datest_data['tempC'] = feauture_data
 
-st.write("{:.2f}".format(future_datest_data))
+st.write(future_datest_data)
 
 new_data = pd.concat([data[['tempC']],future_datest_data], axis=0)
 
