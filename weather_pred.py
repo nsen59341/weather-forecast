@@ -107,7 +107,7 @@ future_dates = [(date1 + datetime.timedelta(days=x)) for x in range(0,len_test)]
 forecast = model.predict(n_periods=len_test)
 
 forecast = pd.DataFrame(forecast,index = future_dates[0:], columns=['Prediction'])
-st.write(forecast)
+# st.write(forecast)
 our_val = forecast.filter(items=[selected_date], axis=0)
 our_val = our_val.values
 # st.write(our_val[0][0])
