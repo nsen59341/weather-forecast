@@ -100,7 +100,7 @@ rms = sqrt(mean_squared_error(test,forecast))
 
 date1 = datetime.datetime.today()
 
-date2 = pd.to_datetime(selected_date, format='%Y/%m/%d')
+date2 = selected_date
 # st.write(date1,' ',date2)
 # n = (date2-date1).days+1
 # st.write("n ",n)
