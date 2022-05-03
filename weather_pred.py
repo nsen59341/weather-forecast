@@ -1,10 +1,12 @@
+### Install libraries
+
 ### IMPORT LIBRARIES
 import warnings 
 warnings.simplefilter('ignore')
 import pandas as pd
 import numpy as np
-# import matplotlib.pyplot as plt
-# import seaborn as sns
+import matplotlib.pyplot as plt
+import seaborn as sns
 from wwo_hist import retrieve_hist_data
 import datetime
 from statsmodels.tsa.stattools import adfuller, acf, pacf
@@ -13,8 +15,7 @@ from math import sqrt
 from sklearn.metrics import mean_squared_error
 from pandas.tseries.offsets import DateOffset
 import streamlit as st
-import warnings
-warnings.simplefilter("ignore")
+
 
 st.title("Weather Forecasting")
 st.write("""
