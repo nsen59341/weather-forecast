@@ -115,8 +115,10 @@ forecast2 = pd.DataFrame(forecast2,index = future_dates, columns=['tempP'])
 
 filter_val = datetime.datetime(int(str(selected_date_time)[:4]), int(str(selected_date_time)[5:7]), int(str(selected_date_time)[8:10]), int(str(selected_date_time)[11:13]) , 0, 0)
 
+forecast_all = pd.concat([forecast,forecast2], axis=0)
+
 # st.write("filter_val ",filter_val)
-our_val = forecast2.filter(items=[filter_val], axis=0)
+our_val = forecast_all.filter(items=[filter_val], axis=0)
 our_val = our_val.values
 st.write(our_val)
 
