@@ -96,24 +96,29 @@ m2 = auto_arima(test, error_action='ignore', seasonal=True, m=8, suppress_warnin
 )
 results2 = m2.fit(test)
 
-len_test = (date2-date1).days+3
+len_test = (date2-date1).days+2
 
 # st.write("n ",len_test)
 
 future_dates = [(date1 + datetime.timedelta(days=x)) for x in range(0,len_test)]
-forecast2 = m2.predict(n_periods=len_test)
+future_dates = [datetime.datetime(int(str(x)[:4]), int(str(x)[5:7]), int(str(x)[8:10]), int(str(x)[11:13]) , 0, 0) for x in future_dates]
+# st.write(future_dates[2])
 
-forecast2 = pd.DataFrame(forecast2,index = future_dates[0:], columns=['tempP'])
+forecast2 = m2.predict(n_periods=len_test)
+# st.write(forecast2)
+
+forecast2 = pd.DataFrame(forecast2,index = future_dates, columns=['tempP'])
+# st.write(forecast2)
 # forecast2.index = forecast2.index.apply(lambda x: datetime.datetime(int(x[:4]), int(x[5:7]), int(x[8:10]), int(x[11:13]) , int(x[14:16]), '00'))
-forecast2.index = forecast2.index.astype('str')
-forecast2.index = [datetime.datetime(int(x[:4]), int(x[5:7]), int(x[8:10]), int(x[11:13]) , 0, 0) for x in forecast2.index]
-st.write(forecast2)
+# forecast2.index = forecast2.index.astype('str')
+# forecast2_index = [datetime.datetime(int(x[:4]), int(x[5:7]), int(x[8:10]), int(x[11:13]) , 0, 0) for x in forecast2.index]
+
 filter_val = datetime.datetime(int(str(selected_date_time)[:4]), int(str(selected_date_time)[5:7]), int(str(selected_date_time)[8:10]), int(str(selected_date_time)[11:13]) , 0, 0)
 
-st.write("filter_val ",filter_val)
+# st.write("filter_val ",filter_val)
 our_val = forecast2.filter(items=[filter_val], axis=0)
 our_val = our_val.values
-st.write(our_val)
+# st.write(our_val)
 
 # rms = sqrt(mean_squared_error(test,forecast))
 
