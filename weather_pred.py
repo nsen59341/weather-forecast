@@ -118,7 +118,7 @@ filter_val = datetime.datetime(int(str(selected_date_time)[:4]), int(str(selecte
 # st.write("filter_val ",filter_val)
 our_val = forecast2.filter(items=[filter_val], axis=0)
 our_val = our_val.values
-# st.write(our_val)
+st.write(our_val)
 
 # rms = sqrt(mean_squared_error(test,forecast))
 
