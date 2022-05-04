@@ -107,13 +107,13 @@ forecast2 = pd.DataFrame(forecast2,index = future_dates[0:], columns=['tempP'])
 # forecast2.index = forecast2.index.apply(lambda x: datetime.datetime(int(x[:4]), int(x[5:7]), int(x[8:10]), int(x[11:13]) , int(x[14:16]), '00'))
 forecast2.index = forecast2.index.astype('str')
 forecast2.index = [datetime.datetime(int(x[:4]), int(x[5:7]), int(x[8:10]), int(x[11:13]) , 0, 0) for x in forecast2.index]
-st.write(forecast2)
+# st.write(forecast2)
 filter_val = datetime.datetime(int(str(selected_date_time)[:4]), int(str(selected_date_time)[5:7]), int(str(selected_date_time)[8:10]), int(str(selected_date_time)[11:13]) , 0, 0)
 
-st.write("filter_val ",filter_val)
+# st.write("filter_val ",filter_val)
 our_val = forecast2.filter(items=[filter_val], axis=0)
 our_val = our_val.values
-st.write(our_val)
+# st.write(our_val)
 
 # rms = sqrt(mean_squared_error(test,forecast))
 
