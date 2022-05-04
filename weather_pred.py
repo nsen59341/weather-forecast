@@ -23,13 +23,13 @@ st.write("""
 """)
 
 selected_date = st.date_input("Pick a date")
-# selected_time = st.time_input("Pick a time")
+selected_time = st.time_input("Pick a time")
 selected_location = st.selectbox("Select a Location", ('Ahmedabad','Bangalore','Delhi','Hydrabad','Kolkata','Mumbai','Pune','Srinagar'))
 
-st.write("Temperature of ", selected_location, " on ", selected_date)
+st.write("Temperature of ", selected_location, " on ", selected_date, "at ", selected_time)
 
 frequency = 3
-start_date = '15-APR-2022'
+start_date = '4-APR-2022'
 end_date = '4-MAY-2022'
 api_key = '47712b8499b545e0b63201153222604'
 location_list = [selected_location.lower()]
@@ -50,7 +50,6 @@ data['date_time'] = pd.to_datetime(data['date_time'])
 ##### We can also drop the location as all thelocatins are same
 data = data[['date_time','tempC']]
 data = data.set_index('date_time')
-data = data.groupby(data.index.date).mean()
 
 ts = data['tempC']
 
@@ -74,43 +73,47 @@ ts = data['tempC']
 
 # test_stationarity(ts)
 
-# ts_log = np.log(ts)
-
-# movingAvg = ts_log.rolling(window=12).mean()
-# movingStd = ts_log.rolling(window=12).std()
-
-# ts_log_mv_diff = ts_log - movingAvg
-# ts_log_mv_diff.dropna(inplace=True)
-
-# test_stationarity(ts_log_mv_diff)
-
-### Now let's try Autoarima
 
 # divide into train and validation set
 train = data[:int(0.8*(len(data)))]
 test = data[int(0.8*(len(data))):]
 
+m1 = auto_arima(train, error_action='ignore', seasonal=True, m=8, suppress_warnings=True, max_p = 2, max_q = 2, start_p = 1, start_q = 1
+)
+results = m1.fit(train)
+
+forecast = m1.predict(n_periods=len(test))
+forecast = pd.DataFrame(forecast,index = test.index,columns=['tempP'])
+
 # st.write(train)
 
-date1 = datetime.date.today()
-date2 = selected_date
+selected_date_time = pd.to_datetime(str(selected_date)+' '+str(selected_time))
+date1 = datetime.datetime.today()
+date2 = selected_date_time
 # st.write(date1,' ',date2)
 
-model = auto_arima(data, trace=True, error_action='ignore', suppress_warnings=True)
-results = model.fit(data)
+m2 = auto_arima(test, error_action='ignore', seasonal=True, m=8, suppress_warnings=True, max_p = 2, max_q = 2, start_p = 1, start_q = 1
+)
+results2 = m2.fit(test)
 
-len_test = (date2-date1).days+1
+len_test = (date2-date1).days+3
 
 # st.write("n ",len_test)
 
 future_dates = [(date1 + datetime.timedelta(days=x)) for x in range(0,len_test)]
-forecast = model.predict(n_periods=len_test)
+forecast2 = m2.predict(n_periods=len_test)
 
-forecast = pd.DataFrame(forecast,index = future_dates[0:], columns=['Prediction'])
-# st.write(forecast)
-our_val = forecast.filter(items=[selected_date], axis=0)
+forecast2 = pd.DataFrame(forecast2,index = future_dates[0:], columns=['tempP'])
+# forecast2.index = forecast2.index.apply(lambda x: datetime.datetime(int(x[:4]), int(x[5:7]), int(x[8:10]), int(x[11:13]) , int(x[14:16]), '00'))
+forecast2.index = forecast2.index.astype('str')
+forecast2.index = [datetime.datetime(int(x[:4]), int(x[5:7]), int(x[8:10]), int(x[11:13]) , 0, 0) for x in forecast2.index]
+st.write(forecast2)
+filter_val = datetime.datetime(int(str(selected_date_time)[:4]), int(str(selected_date_time)[5:7]), int(str(selected_date_time)[8:10]), int(str(selected_date_time)[11:13]) , 0, 0)
+
+st.write("filter_val ",filter_val)
+our_val = forecast2.filter(items=[filter_val], axis=0)
 our_val = our_val.values
-# st.write(our_val[0][0])
+st.write(our_val)
 
 # rms = sqrt(mean_squared_error(test,forecast))
 
@@ -129,7 +132,7 @@ our_val = our_val.values
 
 st.write("{:.2f}".format(our_val[0][0]))
 
-new_data = pd.concat([data['tempC'],forecast], axis=0)
+new_data = pd.concat([data['tempC'],forecast2], axis=0)
 
 f, ax = plt.subplots(figsize=(16, 9))
 ax = plt.plot(new_data)
